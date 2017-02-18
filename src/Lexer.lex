@@ -1,41 +1,41 @@
 import java_cup.runtime.*;
 
 %%
-        %class Lexer
+%class Lexer
 %unicode
-        %cup
-        %line
-        %column
+%cup
+%line
+%column
 
-        %{
-private Symbol symbol(int type) {
-        return new Symbol(type, yyline, yycolumn);
+%{
+        private Symbol symbol(int type) {
+                return new Symbol(type, yyline, yycolumn);
         }
 
-private Symbol symbol(int type, Object value) {
-        return new Symbol(type, yyline, yycolumn, value);
+        private Symbol symbol(int type, Object value) {
+            return new Symbol(type, yyline, yycolumn, value);
         }
-        %}
+%}
 
-        Comment	= #.*\n|\/#([^#]|#[^\/]|\n)*#\/
-        Identifier = [a-zA-Z](_|[a-zA-Z]|[0-9])*
-        Character = [^']
-        Boolean = T|F
-        Integer = [1-9][0-9]*|0
-        Rational = Integer\/[1-9][0-9]*|Integer_Integer\/[1-9][0-9]*
-        Float = Integer\.[0-9][0-9]*
-        Whitespace = \r|\n|\r\n|" "|"\t"
-        String = [^\"]*
+Comment	= #.*\n|\/#([^#]|#[^\/]|\n)*#\/
+Identifier = [a-zA-Z](_|[a-zA-Z]|[0-9])*
+Char = [^']
+Boolean = T|F
+Integer = [1-9][0-9]*|0
+Rational = Integer\/[1-9][0-9]*|Integer_Integer\/[1-9][0-9]*
+Float = Integer\.[0-9][0-9]*
+Whitespace = \r|\n|\r\n|" "|"\t"
+String = [^\"]*
 
-        %%
+%%
 <YYINITIAL> {
   	/* Key Words */
         "main"          { return symbol(sym.MAIN);      }
-        "char"					{ return symbol(sym.tCHAR);     }
-        "bool" 					{ return symbol(sym.tBOOL);     }
-        "int"           { return symbol(sym.tINT);      }
-        "rat"           { return symbol(sym.tRAT);      }
-        "float"         { return symbol(sym.tFLOAT);    }
+        "char"		{ return symbol(sym.TCHAR);     }
+        "bool" 		{ return symbol(sym.TBOOL);     }
+        "int"           { return symbol(sym.TINT);      }
+        "rat"           { return symbol(sym.TRAT);      }
+        "float"         { return symbol(sym.TFLOAT);    }
         "dict"          { return symbol(sym.DICT);      }
         "seq"           { return symbol(sym.SEQ);       }
         "tdef"          { return symbol(sym.TDEF);      }
@@ -74,24 +74,24 @@ private Symbol symbol(int type, Object value) {
         "="             { return symbol(sym.EQ);        }
         "!="            { return symbol(sym.NOTEQ);     }
         ":="            { return symbol(sym.ASSIGN);    }
-        "(" 						{ return symbol(sym.LPAR);			}
-        ")" 						{ return symbol(sym.RPAR);			}
-        "{" 						{ return symbol(sym.LCURL);			}
-        "}" 						{ return symbol(sym.RCURL);			}
-        "[" 						{ return symbol(sym.LSQR);			}
-        "]" 						{ return symbol(sym.RSQR);			}
-        "." 						{ return symbol(sym.DOT);				}
-        ";" 						{ return symbol(sym.SEMICOL);		}
-        "?" 						{ return symbol(sym.GEN);				}
+        "(" 		{ return symbol(sym.LPAR);	}
+        ")" 		{ return symbol(sym.RPAR);	}
+        "{" 		{ return symbol(sym.LCURL);	}
+        "}" 		{ return symbol(sym.RCURL);     }
+        "[" 	      { return symbol(sym.LSQR);	}
+        "]" 	      { return symbol(sym.RSQR);	}
+        "." 		{ return symbol(sym.DOT);	}
+        ";" 		{ return symbol(sym.SEMICOL);	}
+        "?" 		{ return symbol(sym.GEN);	}
 
-  	/* Data Types */
-
+  	  /* Data Types */
         {Comment}        { /*return nothing*/ 																	 }
         {Rational}       { return symbol(sym.RAT, yytext());                     }
         {Float}          { return symbol(sym.FLOAT, Float.parseFloat(yytext())); }
         {Integer}        { return symbol(sym.INT, Integer.parseInt(yytext()));   }
+        {Boolean}        { return symbol(sym.BOOL, yytext());                    }
         "'"{Char}"'"     { return symbol(sym.CHAR, yytext());                    }
         "\""{String}"\"" { return symbol(sym.CHAR, yytext());                    }
         {Identifier}     { return symbol(sym.IDENT, yytext());                   }
         {Whitespace}     { /* do nothing */                                      }
-        }
+}

@@ -3,203 +3,205 @@ import java.util.ArrayList;
 
 scan with {: return lexer.next_token(); :};
 
-        parser code {:
+parser code {:
+        public boolean syntaxErrors = false;
 
-public boolean syntaxErrors = false;
+        private Lexer lexer;
 
-private Lexer lexer;
-
-public Parser(Lexer lex) {
-        super(lex);
-        lexer = lex;
+        public Parser(Lexer lex) {
+                super(lex);
+                lexer = lex;
         }
 
-public void syntax_error(Symbol current_token) {
-        report_error(
-        "Syntax error at line " + (current_token.left+1) + ", column "
-        + current_token.right + " ", null
-        );
-        syntaxErrors = true;
+        public void syntax_error(Symbol current_token) {
+                report_error(
+                        "Syntax error at line " + (current_token.left+1) + ", column "
+                        + current_token.right + " ", null
+                );
+                syntaxErrors = true;
         }
-
-        :};
+:};
 
 // Do something with ILLEGAL_CHARARCTER or drop it.
-        terminal MAIN, TCHAR, TBOOL, TINT, TRAT, TFLOAT, DICT, SEQ, TDEF, ALIAS, FDEF, IF, THEN, ELSE, FI, LOOP, POOL, BREAK, RETURN, READ, PRINT, LEN, TOP, NOT, AND, OR, IMPLY, ADD, SUB, MULT, DIV, POWER, IN, COL, DCOL, LESSTHN, LESSEQ, MORETHN, MOREEQ, EQ, NOTEQ, ASSIGN, LPAR, RPAR, LCURL, RPAR, LCURL, RCURL, LSQR, RSQR, DOT, SEMICOL, EVAL, COMMA;
+terminal MAIN, TCHAR, TBOOL, TINT, TRAT, TFLOAT, DICT, SEQ, TDEF, ALIAS, FDEF, IF, THEN, ELSE, FI, LOOP, POOL, BREAK, RETURN, READ, PRINT, LEN, TOP, NOT, AND, OR, IMPLY, ADD, SUB, MULT, DIV, POWER, IN, COL, DCOL, LESSTHN, LESSEQ, MORETHN, MOREEQ, EQ, NOTEQ, ASSIGN, LPAR, RPAR, RCURL, LCURL, LSQR, RSQR, DOT, SEMICOL, EVAL, COMMA, IDENT, CHAR, INT, FLOAT, RAT, COLON, BOOL, STRING;
 
-        nonterminal grammar, globals, type, formal_parameters_list, function_call, operators, key_val, key_vals, seq_vals, numeric, expression, body, function_body, fdef, assign, tdef, alias, main;
+nonterminal grammar, globals, type, formal_parameter_list, function_call, operator, key_val, key_vals, seq_vals, numeric, expression, body, function_body, fdef, assign, tdef, alias, main;
 
-        precedence left OR, AND, NOT;
-        precedence left EQ, NOTEQ, LESSTHN, LESSEQ, MORETHN, MOREEQ;
-        precedence left DCOL;
-        precedence left ADD, SUB;
-        precedence left DIV, MULT;
-        precedence left POWER;
-        precedence left LPAR, RPAR;
+precedence left OR, AND, NOT;
+precedence left EQ, NOTEQ, LESSTHN, LESSEQ, MORETHN, MOREEQ;
+precedence left DCOL;
+precedence left ADD, SUB;
+precedence left DIV, MULT;
+precedence left POWER;
+precedence left LPAR, RPAR;
 
 /* Context Free Grammar */
-        grammar ::= globals main globals;
+grammar ::= globals main globals;
 
-        globals ::= globals fdef
-        |
-        globals assign //AMBIGUITY
-        |
-        globals tdef
-        |
-        globals alias
-        |
-        ;
+globals ::= globals fdef
+            |
+            globals assign //AMBIGUITY
+            |
+            globals tdef
+            |
+            globals alias
+            |
+            ;
 
-        type ::= TCHAR
-        |
-        TBOOL
-        |
-        TINT
-        |
-        TRAT
-        |
-        TFLOAT
-        |
-        IDENT //for aliases
-        |
-        DICT LESSTHN type COMMA type MORETHN
-        |
-        DICT LESSTHN type COMMA TOP MORETHN
-        |
-        DICT LESSTHN TOP COMMA type MORETHN
-        |
-        DICT LESSTHN TOP COMMA TOP MORETHN //AMBIGUITY
-        |
-        SEQ LESSTHN type MORETHN
-        |
-        SEQ LESSTHN TOP MORETHN
-        |
-        ;
+type ::= TCHAR
+         |
+         TBOOL
+         |
+         TINT
+         |
+         TRAT
+         |
+         TFLOAT
+         |
+         IDENT //for aliases
+         |
+         DICT LESSTHN type COMMA type MORETHN
+         |
+         DICT LESSTHN type COMMA TOP MORETHN
+         |
+         DICT LESSTHN TOP COMMA type MORETHN
+         |
+         DICT LESSTHN TOP COMMA TOP MORETHN //AMBIGUITY
+         |
+         SEQ LESSTHN type MORETHN
+         |
+         SEQ LESSTHN TOP MORETHN
+         |
+         ;
 
-        formal_parameter_list ::= IDENT COLON type
-        |
-        formal_parameter_list COMMA formal_parameter_list
-        |
-        ;
+formal_parameter_list ::= IDENT COLON type
+                          |
+                          formal_parameter_list COMMA formal_parameter_list
+                          |
+                          ;  
 
-        function_call ::= IDENT LPAR formal_parameter_list RPAR SEMICOL;
+function_call ::= IDENT LPAR formal_parameter_list RPAR SEMICOL;
+ 
+operator ::=  AND
+               |
+               OR
+               |
+               IMPLY
+               |
+               ADD
+               |
+               SUB
+               |
+               MULT
+               |
+               DIV
+               |
+               POWER
+               |
+               LESSTHN
+               |
+               LESSEQ
+               |
+               MORETHN
+               |
+               MOREEQ
+               |
+               EQ
+               |
+               NOTEQ
+               |
+               ;
 
-        operators ::=  AND
-        |
-        OR
-        |
-        IMPLY
-        |
-        ADD
-        |
-        SUB
-        |
-        MULT
-        |
-        DIV
-        |
-        POWER
-        |
-        LESSTHN
-        |
-        LESSEQ
-        |
-        MORETHN
-        |
-        MOREEQ
-        |
-        EQ
-        |
-        ;
+key_val ::= INT COLON expression;
 
-        key_val ::= INT COLON expression
+key_vals ::= key_val
+             |
+             key_val COMMA key_val
+             |
+             ;
 
-        key_vals ::= key_val
-        |
-        key_val COMMA key_val
-        |
-        ;
+seq_vals ::= expression
+             |
+             seq_vals COMMA seq_vals
+             |
+             ;
 
-        seq_vals ::= expression
-        |
-        seq_vals COMMA seq_vals
-        |
-        ;
+numeric ::= INT
+            |
+            FLOAT
+            |
+            RAT
+            |
+            SUB numeric
+            |
+            ;
 
-        numeric ::= INT
-        |
-        FLOAT
-        |
-        RAT
-        |
-        SUB numeric
-        |
-        ;
-
-        expression ::= numeric
-        |
-        BOOL
-        |
-        CHAR
-        |
-        STRING
-        |
-        IDENT
-        |
-        expression OPERATOR expression
-        |
-        NOT expression
-        |
-        LCURL key_vals RCURL
-        |
-        LSQR seq_vals RSQR
-        |
-        function_call
+expression ::= numeric
+               |
+               BOOL
+               |
+               CHAR
+               |
+               STRING
+               |
+               IDENT
+               |
+               expression operator expression
+               |
+               NOT expression
+               |
+               LCURL key_vals RCURL
+               |
+               LSQR seq_vals RSQR
+               |
+               function_call
+               |
+               BREAK SEMICOL
+               ;
 
 
-        body ::= assign
-        |
-        READ IDENT SEMICOL
-        |
-        PRINT expression SEMICOL
-        |
-        function_call
-        |
-        EVAL expression EVAL function_call //function call
-        |
-        IF LPAR expression RPAR THEN body FI
-        |
-        IF LPAR expression RPAR THEN body ELSE body FI
-        |
-        LOOP body POOL
-        |
-        ;
+body ::= assign
+         |
+         READ IDENT SEMICOL
+         |
+         PRINT expression SEMICOL
+         |
+         function_call
+         |
+         EVAL expression EVAL function_call //function call
+         |
+         IF LPAR expression RPAR THEN body FI
+         |
+         IF LPAR expression RPAR THEN body ELSE body FI
+         |
+         LOOP body POOL
+         |
+         ;
 
-        function_body ::= body RETURN expression SEMICOL;
+function_body ::= body RETURN expression SEMICOL;
 
-        fdef ::= FDEF IDENT LPAR formal_parameter_list RPAR LCURL function_body RCURL COL type SEMICOL
-        |
-        FDEF IDENT LPAR formal_parameter_list RPAR LCURL function_body RCURL SEMICOL
-        |
-        ; //AMBIGUITY Parameter list must have something in it
+fdef ::= FDEF IDENT LPAR formal_parameter_list RPAR LCURL function_body RCURL COL type SEMICOL
+         |
+         FDEF IDENT LPAR formal_parameter_list RPAR LCURL function_body RCURL SEMICOL
+         |
+         ; //AMBIGUITY Parameter list must have something in it
 
-        assign ::= IDENT COL type ASSIGN expression SEMICOL
-        |
-        IDENT COL type SEMICOL //AMBIGUITY
-        |
-        IDENT LSQR expression RSQR ASSIGN expression SEMICOL
-        |
-        IDENT LSQR expression COL expression RSQR ASSIGN expression SEMICOL
-        ;
+assign ::= IDENT COL type ASSIGN expression SEMICOL
+           |
+           IDENT COL type SEMICOL //AMBIGUITY
+           |
+           IDENT LSQR expression RSQR ASSIGN expression SEMICOL
+           |
+           IDENT LSQR expression COL expression RSQR ASSIGN expression SEMICOL
+           |
+           ;
 
-        tdef ::= TDEF IDENT LCURL formal_parameter_list RCURL SEMICOL
-        |
-        ;
+tdef ::= TDEF IDENT LCURL formal_parameter_list RCURL SEMICOL;
 
-        alias ::= ALIAS type IDENT SEMICOL
-        |
-        ALIAS IDENT IDENT SEMICOL
-        |
-        ;
+alias ::= ALIAS type IDENT SEMICOL
+          |
+ALIAS IDENT IDENT SEMICOL
+          |
+          ;
 
-        main ::= MAIN LCURL body RCURL SEMICOL;
+main ::= MAIN LCURL body RCURL SEMICOL;
