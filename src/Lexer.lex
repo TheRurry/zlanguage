@@ -17,13 +17,14 @@ import java_cup.runtime.*;
         }
 %}
 
+/* Data Type Regular Expressions */
 Comment	= #.*\n|\/#([^#]|#[^\/]|\n)*#\/
 Identifier = [a-zA-Z](_|[a-zA-Z]|[0-9])*
 Char = [^']
 Boolean = T|F
 Integer = [1-9][0-9]*|0
-Rational = Integer\/[1-9][0-9]*|Integer_Integer\/[1-9][0-9]*
-Float = Integer\.[0-9][0-9]*
+Rational = {Integer}\/[1-9][0-9]*|{Integer}_{Integer}\/[1-9][0-9]*
+Float = {Integer}\.[0-9][0-9]*
 Whitespace = \r|\n|\r\n|" "|"\t"
 String = [^\"]*
 
@@ -85,7 +86,7 @@ String = [^\"]*
         "?" 		{ return symbol(sym.EVAL);	}
         "," 		{ return symbol(sym.COMMA);	}
 
-  	  /* Data Types */
+  	/* Data Types */
         {Comment}        { /*return nothing*/ 																	 }
         {Rational}       { return symbol(sym.RAT, yytext());                     }
         {Float}          { return symbol(sym.FLOAT, Float.parseFloat(yytext())); }
