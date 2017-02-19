@@ -22,12 +22,11 @@ parser code {:
         }
 :};
 
-// Do something with ILLEGAL_CHARARCTER or drop it.
 terminal MAIN, TCHAR, TBOOL, TINT, TRAT, TFLOAT, DICT, SEQ, TDEF, ALIAS, FDEF, IF, THEN, ELSE, FI, LOOP, POOL, BREAK, RETURN, READ, PRINT, LEN, TOP, NOT, AND, OR, IMPLY, ADD, SUB, MULT, DIV, POWER, IN, COL, DCOL, LESSTHN, LESSEQ, MORETHN, MOREEQ, EQ, NOTEQ, ASSIGN, LPAR, RPAR, RCURL, LCURL, LSQR, RSQR, DOT, SEMICOL, EVAL, COMMA, IDENT, CHAR, INT, FLOAT, RAT, COLON, BOOL, STRING;
 
 nonterminal grammar, globals, type, formal_parameter_list, function_call, operator, key_val, key_vals, seq_vals, numeric, expression, body, function_body, fdef, assign, tdef, alias, main;
 
-precedence left OR, AND, NOT;
+precedence left OR, AND, IMPLY, NOT;
 precedence left EQ, NOTEQ, LESSTHN, LESSEQ, MORETHN, MOREEQ;
 precedence left DCOL;
 precedence left ADD, SUB;
@@ -35,12 +34,11 @@ precedence left DIV, MULT;
 precedence left POWER;
 precedence left LPAR, RPAR;
 
-/* Context Free Grammar */
 grammar ::= globals main globals;
 
 globals ::= globals fdef
             |
-            globals assign //AMBIGUITY
+            globals assign
             |
             globals tdef
             |
@@ -58,7 +56,7 @@ type ::= TCHAR
          |
          TFLOAT
          |
-         IDENT //for aliases
+         IDENT
          |
          DICT LESSTHN type COMMA type MORETHN
          |
@@ -66,7 +64,7 @@ type ::= TCHAR
          |
          DICT LESSTHN TOP COMMA type MORETHN
          |
-         DICT LESSTHN TOP COMMA TOP MORETHN //AMBIGUITY
+         DICT LESSTHN TOP COMMA TOP MORETHN
          |
          SEQ LESSTHN type MORETHN
          |
@@ -83,36 +81,38 @@ formal_parameter_list ::= IDENT COLON type
 function_call ::= IDENT LPAR formal_parameter_list RPAR SEMICOL;
  
 operator ::=  AND
-               |
-               OR
-               |
-               IMPLY
-               |
-               ADD
-               |
-               SUB
-               |
-               MULT
-               |
-               DIV
-               |
-               POWER
-               |
-               LESSTHN
-               |
-               LESSEQ
-               |
-               MORETHN
-               |
-               MOREEQ
-               |
-               EQ
-               |
-               NOTEQ
-               |
-               ;
+              |
+              OR
+              |
+              IMPLY
+              |
+              ADD
+              |
+              SUB
+              |
+              MULT
+              |
+              DIV
+              |
+              POWER
+              |
+              LESSTHN
+              |
+              LESSEQ
+              |
+              MORETHN
+              |
+              MOREEQ
+              |
+              EQ
+              |
+              NOTEQ
+              |
+              DCOL
+              |
+              ;
 
-key_val ::= INT COLON expression;
+key_val ::= expression COLON expression;
 
 key_vals ::= key_val
              |
@@ -156,7 +156,16 @@ expression ::= numeric
                |
                function_call
                |
-               BREAK SEMICOL
+               BREAK
+               |
+               expression IN LSQR key_vals RSQR
+               |
+               expression IN LCURL seq_vals RCURL
+               |
+               expression IN IDENT
+               |
+               IDENT DOT LEN
+  	       |
                ;
 
 
@@ -168,7 +177,7 @@ body ::= assign
          |
          function_call
          |
-         EVAL expression EVAL function_call //function call
+         EVAL expression EVAL function_call
          |
          IF LPAR expression RPAR THEN body FI
          |
@@ -184,11 +193,11 @@ fdef ::= FDEF IDENT LPAR formal_parameter_list RPAR LCURL function_body RCURL CO
          |
          FDEF IDENT LPAR formal_parameter_list RPAR LCURL function_body RCURL SEMICOL
          |
-         ; //AMBIGUITY Parameter list must have something in it
+         ;
 
 assign ::= IDENT COL type ASSIGN expression SEMICOL
            |
-           IDENT COL type SEMICOL //AMBIGUITY
+           IDENT COL type SEMICOL
            |
            IDENT LSQR expression RSQR ASSIGN expression SEMICOL
            |
@@ -200,7 +209,7 @@ tdef ::= TDEF IDENT LCURL formal_parameter_list RCURL SEMICOL;
 
 alias ::= ALIAS type IDENT SEMICOL
           |
-ALIAS IDENT IDENT SEMICOL
+          ALIAS IDENT IDENT SEMICOL
           |
           ;
 
