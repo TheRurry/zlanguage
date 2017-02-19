@@ -82,7 +82,8 @@ String = [^\"]*
         "]" 	      { return symbol(sym.RSQR);	}
         "." 		{ return symbol(sym.DOT);	}
         ";" 		{ return symbol(sym.SEMICOL);	}
-        "?" 		{ return symbol(sym.GEN);	}
+        "?" 		{ return symbol(sym.EVAL);	}
+        "," 		{ return symbol(sym.COMMA);	}
 
   	  /* Data Types */
         {Comment}        { /*return nothing*/ 																	 }

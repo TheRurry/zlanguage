@@ -24,7 +24,7 @@ parser code {:
 
 terminal MAIN, TCHAR, TBOOL, TINT, TRAT, TFLOAT, DICT, SEQ, TDEF, ALIAS, FDEF, IF, THEN, ELSE, FI, LOOP, POOL, BREAK, RETURN, READ, PRINT, LEN, TOP, NOT, AND, OR, IMPLY, ADD, SUB, MULT, DIV, POWER, IN, COL, DCOL, LESSTHN, LESSEQ, MORETHN, MOREEQ, EQ, NOTEQ, ASSIGN, LPAR, RPAR, RCURL, LCURL, LSQR, RSQR, DOT, SEMICOL, EVAL, COMMA, IDENT, CHAR, INT, FLOAT, RAT, COLON, BOOL, STRING;
 
-nonterminal grammar, globals, type, formal_parameter_list, function_call, operator, key_val, key_vals, seq_vals, numeric, expression, body, function_body, fdef, assign, tdef, alias, main;
+nonterminal grammar, globals, type, formal_parameter_list, function_call, operator, key_val, key_vals, seq_vals, numeric, expression, body, function_body, statement, fdef, assign, tdef, alias, main;
 
 precedence left OR, AND, IMPLY, NOT;
 precedence left EQ, NOTEQ, LESSTHN, LESSEQ, MORETHN, MOREEQ;
@@ -42,9 +42,7 @@ globals ::= globals fdef
             |
             globals tdef
             |
-            globals alias
-            |
-            ;
+            globals alias;
 
 type ::= TCHAR
          |
@@ -58,25 +56,17 @@ type ::= TCHAR
          |
          IDENT
          |
-         DICT LESSTHN type COMMA type MORETHN
+         DICT LESSTHN INT COMMA type MORETHN
          |
-         DICT LESSTHN type COMMA TOP MORETHN
-         |
-         DICT LESSTHN TOP COMMA type MORETHN
-         |
-         DICT LESSTHN TOP COMMA TOP MORETHN
+         DICT LESSTHN INT COMMA TOP MORETHN
          |
          SEQ LESSTHN type MORETHN
          |
-         SEQ LESSTHN TOP MORETHN
-         |
-         ;
+         SEQ LESSTHN TOP MORETHN;
 
 formal_parameter_list ::= IDENT COLON type
                           |
-                          formal_parameter_list COMMA formal_parameter_list
-                          |
-                          ;  
+                          formal_parameter_list COMMA IDENT COLON type;  
 
 function_call ::= IDENT LPAR formal_parameter_list RPAR SEMICOL;
  
@@ -108,23 +98,17 @@ operator ::=  AND
               |
               NOTEQ
               |
-              DCOL
-              |
-              ;
+              DCOL;
 
 key_val ::= expression COLON expression;
 
 key_vals ::= key_val
              |
-             key_val COMMA key_val
-             |
-             ;
+             key_val COMMA expression COLON expression;
 
 seq_vals ::= expression
              |
-             seq_vals COMMA seq_vals
-             |
-             ;
+             seq_vals COMMA expression;
 
 numeric ::= INT
             |
@@ -132,9 +116,7 @@ numeric ::= INT
             |
             RAT
             |
-            SUB numeric
-            |
-            ;
+            SUB numeric;
 
 expression ::= numeric
                |
@@ -158,59 +140,50 @@ expression ::= numeric
                |
                BREAK
                |
-               expression IN LSQR key_vals RSQR
+               INT IN LSQR key_vals RSQR
                |
-               expression IN LCURL seq_vals RCURL
+               INT IN LCURL seq_vals RCURL
                |
-               expression IN IDENT
+               INT IN IDENT
                |
-               IDENT DOT LEN
-  	       |
-               ;
+               IDENT DOT LEN;
 
+body ::= body statement
+         |
+         statement;
 
-body ::= assign
-         |
-         READ IDENT SEMICOL
-         |
-         PRINT expression SEMICOL
-         |
-         function_call
-         |
-         EVAL expression EVAL function_call
-         |
-         IF LPAR expression RPAR THEN body FI
-         |
-         IF LPAR expression RPAR THEN body ELSE body FI
-         |
-         LOOP body POOL
-         |
-         ;
+statement ::= assign
+              |
+              READ IDENT SEMICOL
+              |
+              PRINT expression SEMICOL
+              |
+              function_call
+              |
+              EVAL expression EVAL function_call
+              |
+              IF LPAR expression RPAR THEN body FI
+              |
+              IF LPAR expression RPAR THEN body ELSE body FI
+              |
+              LOOP body POOL;
 
 function_body ::= body RETURN expression SEMICOL;
 
 fdef ::= FDEF IDENT LPAR formal_parameter_list RPAR LCURL function_body RCURL COL type SEMICOL
          |
-         FDEF IDENT LPAR formal_parameter_list RPAR LCURL function_body RCURL SEMICOL
-         |
-         ;
+         FDEF IDENT LPAR formal_parameter_list RPAR LCURL function_body RCURL SEMICOL;
 
 assign ::= IDENT COL type ASSIGN expression SEMICOL
            |
            IDENT COL type SEMICOL
            |
-           IDENT LSQR expression RSQR ASSIGN expression SEMICOL
+           IDENT LSQR INT RSQR ASSIGN expression SEMICOL
            |
-           IDENT LSQR expression COL expression RSQR ASSIGN expression SEMICOL
-           |
-           ;
+           IDENT LSQR INT COL INT RSQR ASSIGN expression SEMICOL;
 
 tdef ::= TDEF IDENT LCURL formal_parameter_list RCURL SEMICOL;
 
-alias ::= ALIAS type IDENT SEMICOL
-          |
-          ALIAS IDENT IDENT SEMICOL
-          |
-          ;
+alias ::= ALIAS type IDENT SEMICOL;
 
 main ::= MAIN LCURL body RCURL SEMICOL;
