@@ -24,7 +24,7 @@ parser code {:
 
 terminal MAIN, TCHAR, TBOOL, TINT, TRAT, TFLOAT, DICT, SEQ, TDEF, ALIAS, FDEF, IF, THEN, ELSE, FI, LOOP, POOL, BREAK, RETURN, READ, PRINT, LEN, TOP, NOT, AND, OR, IMPLY, ADD, SUB, MULT, DIV, POWER, IN, COL, DCOL, LESSTHN, LESSEQ, MORETHN, MOREEQ, EQ, NOTEQ, ASSIGN, LPAR, RPAR, RCURL, LCURL, LSQR, RSQR, DOT, SEMICOL, EVAL, COMMA, IDENT, CHAR, INT, FLOAT, RAT, COLON, BOOL, STRING;
 
-nonterminal grammar, globals, type, formal_parameter_list, function_call, operator, key_val, key_vals, seq_vals, numeric, expression, body, function_body, statement, fdef, assign, tdef, alias, main;
+nonterminal grammar, globals, type, formal_parameter_list, dot_ident, nullable_expression, function_call, operator, key_val, key_vals, seq_vals, numeric, expression, body, statement, fdef, assign, tdef, alias, main;
 
 precedence left OR, AND, IMPLY, NOT;
 precedence left EQ, NOTEQ, LESSTHN, LESSEQ, MORETHN, MOREEQ;
@@ -77,7 +77,7 @@ formal_parameter_list ::= IDENT COLON type
 /*done*/
 function_call ::= IDENT LPAR seq_vals RPAR SEMICOL
                   |
-                  IDENT LPAR RPAR SEMICOL
+                  IDENT LPAR RPAR SEMICOL;
  
 /*done*/
 operator ::=  AND
@@ -135,7 +135,7 @@ dot_ident ::= IDENT
               dot_ident DOT IDENT;
 
 /*done*/
-null_expression ::= expr
+nullable_expression ::= expression
                     |
                     ;
 
@@ -156,27 +156,27 @@ expression ::= dot_ident
                |
                NOT expression
                |
-               LPAREN expression RPAREN
+               LPAR expression RPAR
                |
                EVAL expression EVAL function_call
                |
                function_call
                |
-               LSQUARE seq_vals RSQUARE
+               LSQR seq_vals RSQR
                |
-               LSQUARE RSQUARE
+               LSQR RSQR
                |
-               dot_ident LSQUARE expression RSQUARE
+               dot_ident LSQR expression RSQR
                |
-               dot_ident LSQUARE null_expression COLON null_expression RSQUARE
+               dot_ident LSQR nullable_expression COLON nullable_expression RSQR
                |
-               IDENTIFIER IN dot_ident
+               IDENT IN dot_ident
                |
-               INTEGER IN dot_ident
+               INT IN dot_ident
                |
-               LCURLY key_vals RCURLY
+               LCURL key_vals RCURL
                |
-               LCURLY RCURLY;
+               LCURL RCURL;
 
 /*done*/
 body ::= body statement
@@ -194,9 +194,9 @@ statement ::= nullable_expression SEMICOL
               |
               PRINT expression SEMICOL
               |
-              IF LPAREN expression RPAREN THEN body FI
+              IF LPAR expression RPAR THEN body FI
               |
-              IF LPAREN expression RPAREN THEN body ELSE body FI
+              IF LPAR expression RPAR THEN body ELSE body FI
               |
               LOOP body POOL
               |
@@ -217,16 +217,16 @@ fdef ::= FDEF IDENT LPAR formal_parameter_list RPAR LCURL body RCURL COLON type 
          |
          FDEF IDENT LPAR RPAR LCURL body RCURL COLON type SEMICOL
          |
-         FDEF IDENT LPAR RPAR LCURL body RCURL SEMICOL;
+         FDEF IDENT LPAR RPAR LCURL body RCURL SEMICOL
+         |
+         FDEF IDENT LPAR RPAR LCURL RCURL COLON type SEMICOL
+         |
+         FDEF IDENT LPAR RPAR LCURL RCURL SEMICOL;
 
 /*done*/
 assign ::= IDENT COL type ASSIGN expression SEMICOL
            |
-           IDENT COL type SEMICOL
-           |
-           IDENT LSQR INT RSQR ASSIGN expression SEMICOL
-           |
-           IDENT LSQR INT COL INT RSQR ASSIGN expression SEMICOL;
+           IDENT COL type SEMICOL;
 
 /*done*/
 tdef ::= TDEF IDENT LCURL formal_parameter_list RCURL SEMICOL;
