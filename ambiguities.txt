@@ -1,0 +1,19 @@
+Paragraph: 8
+Problem: It is not clear whether the dictionary compound type can be dict<top,top>.
+Our Solution: As it says “Use the special type keyword top to define a dictionary that allows any type for a key or value”, we have prevented dict<top,top> from being used.
+
+Paragraph: 11
+Problem: It is not clear whether we can omit both the start and end indices in sequence slicing, like "foo = bar[:]".
+Our Solution: This is possible in many other languages that support list slicing (like Python), so our compiler accepts this syntax.
+
+Paragraph: 14
+Problem: It is ambiguous whether a parameter list can be empty.
+Our Solution: In the end, we allowed a parameter list to be empty due to other popular languages such as Java allowing the same.
+
+Paragraph: 17
+Problem: It is ambiguous of whether declaring a variable without assigning a value is allowed. For instance, “a : int;”.
+Our Solution: Due to other popular languages such as C allowing for declarations without assignments, we have decided to allow this as well. 
+
+Paragraph: 20
+Problem: It is not clear whether or not the main function should contain the keyword return, or be allowed it and just be able to return no value.
+Our Solution: Like other popular language we allow the main function to contain the return keyword, and allow return to be used as follows: return;.

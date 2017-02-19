@@ -63,6 +63,8 @@ type ::= TCHAR
          |
          DICT LESSTHN TINT COMMA TOP MORETHN
          |
+         DICT LESSTHN TOP COMMA type MORETHN
+         |
          SEQ LESSTHN type MORETHN
          |
          SEQ LESSTHN TOP MORETHN;
