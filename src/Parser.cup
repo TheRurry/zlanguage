@@ -34,16 +34,21 @@ precedence left DIV, MULT;
 precedence left POWER;
 precedence left LPAR, RPAR;
 
+/*done*/
 grammar ::= globals main globals;
 
+/*done*/
 globals ::= globals fdef
             |
             globals assign
             |
             globals tdef
             |
-            globals alias;
+            globals alias
+            |
+            ;
 
+/*done*/
 type ::= TCHAR
          |
          TBOOL
@@ -64,12 +69,17 @@ type ::= TCHAR
          |
          SEQ LESSTHN TOP MORETHN;
 
+/*done*/
 formal_parameter_list ::= IDENT COLON type
                           |
                           formal_parameter_list COMMA IDENT COLON type;  
 
-function_call ::= IDENT LPAR formal_parameter_list RPAR SEMICOL;
+/*done*/
+function_call ::= IDENT LPAR seq_vals RPAR SEMICOL
+                  |
+                  IDENT LPAR RPAR SEMICOL
  
+/*done*/
 operator ::=  AND
               |
               OR
@@ -100,16 +110,17 @@ operator ::=  AND
               |
               DCOL;
 
-key_val ::= expression COLON expression;
-
-key_vals ::= key_val
+/*done*/
+key_vals ::= expression COLON expression
              |
              key_val COMMA expression COLON expression;
 
+/*done*/
 seq_vals ::= expression
              |
              seq_vals COMMA expression;
 
+/*done*/
 numeric ::= INT
             |
             FLOAT
@@ -118,62 +129,97 @@ numeric ::= INT
             |
             SUB numeric;
 
-expression ::= numeric
+/*done*/
+dot_ident ::= IDENT
+              |
+              dot_ident DOT IDENT;
+
+/*done*/
+null_expression ::= expr
+                    |
+                    ;
+
+/*done*/
+expression ::= dot_ident
                |
-               BOOL
+               numeric
                |
                CHAR
                |
                STRING
                |
-               IDENT
+               BOOL
+               |
+               dot_ident DOT LEN
                |
                expression operator expression
                |
                NOT expression
                |
-               LCURL key_vals RCURL
+               LPAREN expression RPAREN
                |
-               LSQR seq_vals RSQR
+               EVAL expression EVAL function_call
                |
                function_call
                |
-               BREAK
+               LSQUARE seq_vals RSQUARE
                |
-               INT IN LSQR key_vals RSQR
+               LSQUARE RSQUARE
                |
-               INT IN LCURL seq_vals RCURL
+               dot_ident LSQUARE expression RSQUARE
                |
-               INT IN IDENT
+               dot_ident LSQUARE null_expression COLON null_expression RSQUARE
                |
-               IDENT DOT LEN;
+               IDENTIFIER IN dot_ident
+               |
+               INTEGER IN dot_ident
+               |
+               LCURLY key_vals RCURLY
+               |
+               LCURLY RCURLY;
 
+/*done*/
 body ::= body statement
          |
          statement;
 
-statement ::= assign
+/*done*/
+statement ::= nullable_expression SEMICOL
               |
-              READ IDENT SEMICOL
+              assign
+              |
+              dot_ident assign expression SEMICOL
+              |
+              READ dot_ident SEMICOL
               |
               PRINT expression SEMICOL
               |
-              function_call
+              IF LPAREN expression RPAREN THEN body FI
               |
-              EVAL expression EVAL function_call
+              IF LPAREN expression RPAREN THEN body ELSE body FI
               |
-              IF LPAR expression RPAR THEN body FI
+              LOOP body POOL
               |
-              IF LPAR expression RPAR THEN body ELSE body FI
+              RETURN nullable_expression SEMICOL
               |
-              LOOP body POOL;
+              ALIAS type type SEMICOL
+              |
+              BREAK SEMICOL
+              |
+              BREAK INT SEMICOL
+              |
+              tdef;
 
-function_body ::= body RETURN expression SEMICOL;
-
-fdef ::= FDEF IDENT LPAR formal_parameter_list RPAR LCURL function_body RCURL COL type SEMICOL
+/*done*/
+fdef ::= FDEF IDENT LPAR formal_parameter_list RPAR LCURL body RCURL COLON type SEMICOL
          |
-         FDEF IDENT LPAR formal_parameter_list RPAR LCURL function_body RCURL SEMICOL;
+         FDEF IDENT LPAR formal_parameter_list RPAR LCURL body RCURL SEMICOL
+         |
+         FDEF IDENT LPAR RPAR LCURL body RCURL COLON type SEMICOL
+         |
+         FDEF IDENT LPAR RPAR LCURL body RCURL SEMICOL;
 
+/*done*/
 assign ::= IDENT COL type ASSIGN expression SEMICOL
            |
            IDENT COL type SEMICOL
@@ -182,8 +228,11 @@ assign ::= IDENT COL type ASSIGN expression SEMICOL
            |
            IDENT LSQR INT COL INT RSQR ASSIGN expression SEMICOL;
 
+/*done*/
 tdef ::= TDEF IDENT LCURL formal_parameter_list RCURL SEMICOL;
 
+/*done*/
 alias ::= ALIAS type IDENT SEMICOL;
 
+/*done*/
 main ::= MAIN LCURL body RCURL SEMICOL;
