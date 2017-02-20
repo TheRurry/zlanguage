@@ -59,9 +59,9 @@ type ::= TCHAR
          |
          IDENT
          |
-         DICT LESSTHN TINT COMMA type MORETHN
+         DICT LESSTHN type COMMA type MORETHN
          |
-         DICT LESSTHN TINT COMMA TOP MORETHN
+         DICT LESSTHN type COMMA TOP MORETHN
          |
          DICT LESSTHN TOP COMMA type MORETHN
          |
