@@ -1,3 +1,3 @@
-Name: Asim Ali          Email: zcablix@ucl.ac.uk        ID: 15004872 
-Name: Ryan Collins 	    Email: zcabrdc@ucl.ac.uk        ID: 15035850
-Name: Hai Xia 		    Email: zcabhxi@ucl.ac.uk	    ID: 15024313
+15004872 <zcablix@ucl.ac.uk> Asim Ali
+15035850 <zcabrdc@ucl.ac.uk> Ryan Collins
+15024313 <zcabhxi@ucl.ac.uk> Hai Xia
