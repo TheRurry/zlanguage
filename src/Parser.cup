@@ -1,3 +1,8 @@
+/* For function declarations, each formal parameter follows the variable/field declaration syntax, id : type.
+The formal parameter list is comma-separated list of parameter declarations. A function’s body consists of local
+variable declarations, if any, followed by statements. The return type of the function is returnType and is
+omitted when the function does not return a value. In Listing 2, the function’s name is an identifier. */
+
 import java_cup.runtime.*;
 import java.util.ArrayList;
 
@@ -24,7 +29,7 @@ parser code {:
 
 terminal MAIN, TCHAR, TBOOL, TINT, TRAT, TFLOAT, DICT, SEQ, TDEF, ALIAS, FDEF, IF, THEN, ELSE, FI, LOOP, POOL, BREAK, RETURN, READ, PRINT, LEN, TOP, NOT, AND, OR, IMPLY, ADD, SUB, MULT, DIV, POWER, IN, COL, DCOL, LESSTHN, LESSEQ, MORETHN, MOREEQ, EQ, NOTEQ, ASSIGN, LPAR, RPAR, RCURL, LCURL, LSQR, RSQR, DOT, SEMICOL, EVAL, COMMA, IDENT, CHAR, INT, FLOAT, RAT, BOOL, STRING;
 
-nonterminal grammar, globals, type, formal_parameter_list, dot_ident, index_ident, nullable_expression, function_call, operator, key_vals, seq_vals, numeric, expression, body, statement, fdef, assign, tdef, alias, main;
+nonterminal grammar, globals, type, formal_parameter_list, dot_ident, index_ident, nullable_expression, function_call, operator, key_vals, seq_vals, numeric, expression, body, statement, fdef, assign, tdef, alias, main, statements, assignments;
 
 precedence left OR, AND, IMPLY, NOT;
 precedence left EQ, NOTEQ, LESSTHN, LESSEQ, MORETHN, MOREEQ;
@@ -64,6 +69,8 @@ type ::= TCHAR
          DICT LESSTHN type COMMA TOP MORETHN
          |
          DICT LESSTHN TOP COMMA type MORETHN
+         |
+         DICT LESSTHN TOP COMMA TOP MORETHN
          |
          SEQ LESSTHN type MORETHN
          |
@@ -167,17 +174,21 @@ expression ::= dot_ident
                |
                LCURL RCURL;
 
- index_ident ::= dot_ident LSQR expression RSQR
+index_ident ::= dot_ident LSQR expression RSQR
                  |
                  dot_ident LSQR nullable_expression COL nullable_expression RSQR;              
 
-body ::= body statement 
-         |
-         statement;
+body ::= assignments statements;
+
+assignments ::= assignments assign
+                |
+                ;
+  
+statements ::=  statements statement
+                |
+                statement;
 
 statement ::= nullable_expression SEMICOL
-              |
-              assign
               |
               dot_ident ASSIGN expression SEMICOL
               |
