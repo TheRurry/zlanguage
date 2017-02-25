@@ -1,7 +1,3 @@
-Paragraph: 8
-Problem: It is not clear whether the dictionary compound type can be dict<top,top>.
-Our Solution: As it says “Use the special type keyword top to define a dictionary that allows any type for a key or value”, we have prevented dict<top,top> from being used.
-
 Paragraph: 11
 Problem: It is not clear whether we can omit both the start and end indices in sequence slicing, like "foo = bar[:]".
 Our Solution: This is possible in many other languages that support list slicing (like Python), so our compiler accepts this syntax.
