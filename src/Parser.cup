@@ -172,7 +172,7 @@ expression ::= dot_ident
                |
                LCURL key_vals RCURL
                |
-               seq_vals;
+               seq_vals
                |
                LCURL RCURL;
 
