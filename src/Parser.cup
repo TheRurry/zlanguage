@@ -169,7 +169,11 @@ dot_ident ::= IDENT
               |
               dot_ident LSQR expression RSQR
               |
-              dot_ident LSQR nullable_expression COL nullable_expression RSQR;  
+              dot_ident LSQR expression COL expression RSQR
+              |
+              dot_ident LSQR expression COL RSQR
+              |
+              dot_ident LSQR COL expression RSQR;      
 
 body ::= assignments statements;
 
