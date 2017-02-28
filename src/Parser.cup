@@ -185,9 +185,9 @@ statements ::=  statements normal_statement
 
 statement ::= nullable_expression SEMICOL
               |
-              dot_ident ASSIGN expression SEMICOL
+              dot_ident ASSIGN seq_vals SEMICOL
               |
-              index_ident ASSIGN expression SEMICOL
+              index_ident ASSIGN seq_vals SEMICOL
               |
               READ dot_ident SEMICOL
               |
@@ -209,7 +209,7 @@ breakable_statements ::= breakable_statements breakable_statement
                          |
                          BREAK SEMICOL
                          |
-            		 BREAK INT SEMICOL;
+                         BREAK INT SEMICOL;
                          
 normal_statement ::= IF LPAR expression RPAR THEN body FI
                      |
