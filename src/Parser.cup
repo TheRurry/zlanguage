@@ -172,6 +172,8 @@ expression ::= dot_ident
                |
                LCURL key_vals RCURL
                |
+               seq_vals;
+               |
                LCURL RCURL;
 
 index_ident ::= dot_ident LSQR expression RSQR
