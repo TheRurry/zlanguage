@@ -75,16 +75,16 @@ String = [^\"]*
         "="             { return symbol(sym.EQ);        }
         "!="            { return symbol(sym.NOTEQ);     }
         ":="            { return symbol(sym.ASSIGN);    }
-        "(" 		{ return symbol(sym.LPAR);	}
-        ")" 		{ return symbol(sym.RPAR);	}
-        "{" 		{ return symbol(sym.LCURL);	}
+        "(" 		{ return symbol(sym.LPAR);	  }
+        ")" 		{ return symbol(sym.RPAR);	  }
+        "{" 		{ return symbol(sym.LCURL);	  }
         "}" 		{ return symbol(sym.RCURL);     }
-        "[" 	      { return symbol(sym.LSQR);	}
-        "]" 	      { return symbol(sym.RSQR);	}
-        "." 		{ return symbol(sym.DOT);	}
-        ";" 		{ return symbol(sym.SEMICOL);	}
-        "?" 		{ return symbol(sym.EVAL);	}
-        "," 		{ return symbol(sym.COMMA);	}
+        "[" 	      { return symbol(sym.LSQR);	  }
+        "]" 	      { return symbol(sym.RSQR);	  }
+        "." 		{ return symbol(sym.DOT);	  }
+        ";" 		{ return symbol(sym.SEMICOL);	  }
+        "?" 		{ return symbol(sym.EVAL);	  }
+        "," 		{ return symbol(sym.COMMA);	  }
 
   	/* Data Types */
         {Comment}        { /*return nothing*/ 																	 }

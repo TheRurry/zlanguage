@@ -1,4 +1,4 @@
 main {
-	x : rat := 2 / 3;
+	x : rat := 5_2/3;
 	return;
 };
