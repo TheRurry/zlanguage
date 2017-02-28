@@ -24,7 +24,7 @@ parser code {:
 
 terminal MAIN, TCHAR, TBOOL, TINT, TRAT, TFLOAT, DICT, SEQ, TDEF, ALIAS, FDEF, IF, THEN, ELSE, FI, LOOP, POOL, BREAK, RETURN, READ, PRINT, LEN, TOP, NOT, AND, OR, IMPLY, ADD, SUB, MULT, DIV, POWER, IN, COL, DCOL, LESSTHN, LESSEQ, MORETHN, MOREEQ, EQ, NOTEQ, ASSIGN, LPAR, RPAR, RCURL, LCURL, LSQR, RSQR, DOT, SEMICOL, EVAL, COMMA, IDENT, CHAR, INT, FLOAT, RAT, BOOL, STRING;
 
-nonterminal grammar, globals, type, formal_parameter_list, dot_ident, index_ident, nullable_expression, function_call, operator, key_vals, seq_vals, numeric, expression, body, statement, fdef, assign, tdef, alias, main, statements, assignments, loop_body, breakable_statements, breakable_statement, normal_statement;
+nonterminal grammar, globals, type, formal_parameter_list, dot_ident, nullable_expression, function_call, operator, key_vals, seq_vals, numeric, expression, body, statement, fdef, assign, tdef, alias, main, statements, assignments, loop_body, breakable_statements, breakable_statement, normal_statement;
 
 precedence left OR, AND, IMPLY, NOT;
 precedence left EQ, NOTEQ, LESSTHN, LESSEQ, MORETHN, MOREEQ;
@@ -125,10 +125,6 @@ numeric ::= INT
             |
             SUB numeric;
 
-dot_ident ::= IDENT
-              |
-              dot_ident DOT IDENT;
-
 nullable_expression ::= expression
                         |
                         ;
@@ -159,19 +155,21 @@ expression ::= dot_ident
                |
                LSQR RSQR
                |
-               index_ident
-               |
                IDENT IN dot_ident
                |
                INT IN dot_ident
                |
                LCURL key_vals RCURL
                |
-               LCURL RCURL;
-
-index_ident ::= dot_ident LSQR expression RSQR
-                 |
-                 dot_ident LSQR nullable_expression COL nullable_expression RSQR;              
+               LCURL RCURL;    
+                 
+dot_ident ::= IDENT
+              |
+              dot_ident DOT IDENT
+              |
+              dot_ident LSQR expression RSQR
+              |
+              dot_ident LSQR nullable_expression COL nullable_expression RSQR;  
 
 body ::= assignments statements;
 
@@ -186,8 +184,6 @@ statements ::=  statements normal_statement
 statement ::= nullable_expression SEMICOL
               |
               dot_ident ASSIGN seq_vals SEMICOL
-              |
-              index_ident ASSIGN seq_vals SEMICOL
               |
               READ dot_ident SEMICOL
               |
