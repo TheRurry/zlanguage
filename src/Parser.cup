@@ -1,9 +1,3 @@
-
-/* For function declarations, each formal parameter follows the variable/field declaration syntax, id : type.
-The formal parameter list is comma-separated list of parameter declarations. A function’s body consists of local
-variable declarations, if any, followed by statements. The return type of the function is returnType and is
-omitted when the function does not return a value. In Listing 2, the function’s name is an identifier. */
-
 import java_cup.runtime.*;
 import java.util.ArrayList;
 
@@ -30,7 +24,7 @@ parser code {:
 
 terminal MAIN, TCHAR, TBOOL, TINT, TRAT, TFLOAT, DICT, SEQ, TDEF, ALIAS, FDEF, IF, THEN, ELSE, FI, LOOP, POOL, BREAK, RETURN, READ, PRINT, LEN, TOP, NOT, AND, OR, IMPLY, ADD, SUB, MULT, DIV, POWER, IN, COL, DCOL, LESSTHN, LESSEQ, MORETHN, MOREEQ, EQ, NOTEQ, ASSIGN, LPAR, RPAR, RCURL, LCURL, LSQR, RSQR, DOT, SEMICOL, EVAL, COMMA, IDENT, CHAR, INT, FLOAT, RAT, BOOL, STRING;
 
-nonterminal grammar, globals, type, formal_parameter_list, dot_ident, index_ident, nullable_expression, function_call, operator, key_vals, seq_vals, numeric, expression, body, statement, fdef, assign, tdef, alias, main, statements, assignments;
+nonterminal grammar, globals, type, formal_parameter_list, dot_ident, index_ident, nullable_expression, function_call, operator, key_vals, seq_vals, numeric, expression, body, statement, fdef, assign, tdef, alias, main, statements, assignments, loop_body, breakable_statements, breakable_statement, normal_statement;
 
 precedence left OR, AND, IMPLY, NOT;
 precedence left EQ, NOTEQ, LESSTHN, LESSEQ, MORETHN, MOREEQ;
@@ -185,9 +179,9 @@ assignments ::= assignments assign
                 |
                 ;
   
-statements ::=  statements statement
+statements ::=  statements normal_statement
                 |
-                statement;
+                normal_statement;
 
 statement ::= nullable_expression SEMICOL
               |
@@ -199,21 +193,35 @@ statement ::= nullable_expression SEMICOL
               |
               PRINT expression SEMICOL
               |
-              IF LPAR expression RPAR THEN body FI
-              |
-              IF LPAR expression RPAR THEN body ELSE body FI
-              |
-              LOOP body POOL
+              LOOP loop_body POOL
               |
               RETURN nullable_expression SEMICOL
               |
               alias
               |
-              BREAK SEMICOL
-              |
-              BREAK INT SEMICOL
-              |
               tdef;
+              
+loop_body ::= assignments breakable_statements;
+
+breakable_statements ::= breakable_statements breakable_statement
+                         |
+                         breakable_statement
+                         |
+                         BREAK SEMICOL
+                         |
+            		 BREAK INT SEMICOL;
+                         
+normal_statement ::= IF LPAR expression RPAR THEN body FI
+                     |
+                     IF LPAR expression RPAR THEN body ELSE body FI
+                     |
+                     statement;
+                         
+breakable_statement ::= IF LPAR expression RPAR THEN loop_body FI
+                        |
+                        IF LPAR expression RPAR THEN loop_body ELSE loop_body FI
+                        |
+                        statement;
 
 fdef ::= FDEF IDENT LPAR formal_parameter_list RPAR LCURL body RCURL COL type SEMICOL
          |
