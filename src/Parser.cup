@@ -229,7 +229,11 @@ fdef ::= FDEF IDENT LPAR formal_parameter_list RPAR LCURL body RCURL COL type SE
          |
          FDEF IDENT LPAR RPAR LCURL body RCURL SEMICOL
          |
-         FDEF IDENT LPAR RPAR LCURL body RCURL COL type SEMICOL;
+         FDEF IDENT LPAR RPAR LCURL body RCURL COL type SEMICOL
+         |
+         FDEF IDENT LPAR RPAR LCURL RCURL SEMICOL
+         |
+         FDEF IDENT LPAR RPAR LCURL RCURL COL type SEMICOL;
 
 assign ::= IDENT COL type ASSIGN seq_vals SEMICOL
            |
