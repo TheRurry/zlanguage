@@ -1,3 +1,4 @@
+
 /* For function declarations, each formal parameter follows the variable/field declaration syntax, id : type.
 The formal parameter list is comma-separated list of parameter declarations. A function’s body consists of local
 variable declarations, if any, followed by statements. The return type of the function is returnType and is
@@ -206,7 +207,7 @@ statement ::= nullable_expression SEMICOL
               |
               RETURN nullable_expression SEMICOL
               |
-              ALIAS type type SEMICOL
+              alias
               |
               BREAK SEMICOL
               |
