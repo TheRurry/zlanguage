@@ -25,7 +25,7 @@ Boolean = T|F
 Integer = [1-9][0-9]*|0
 Rational = {Integer}\/[1-9][0-9]*|{Integer}_{Integer}\/[1-9][0-9]*
 Float = {Integer}\.[0-9][0-9]*
-Whitespace = \r|\n|\r\n|" "|"\t"
+Whitespace = \r|\n|\r\n|\s|\t
 String = [^\"]*
 
 %%
