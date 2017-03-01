@@ -192,7 +192,7 @@ statement ::= nullable_expression SEMICOL
               |
               tdef;
               
-loop_body ::= assignments breakable_statements;
+loop_body ::= breakable_statements;
 
 breakable_statements ::= breakable_statements breakable_statement
                          |
