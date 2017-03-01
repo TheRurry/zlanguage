@@ -33,6 +33,7 @@ precedence left ADD, SUB;
 precedence left DIV, MULT;
 precedence left POWER;
 precedence left LPAR, RPAR;
+precedence left IN;
 
 /* The grammar */
 grammar ::= globals main globals;
@@ -107,6 +108,8 @@ operator ::= AND
              |
              NOTEQ
              |
+             IN
+             |
              DCOL;
 
 key_vals ::= expression COL expression 
@@ -139,8 +142,6 @@ expression ::= dot_ident
                |
                STRING
                |
-               dot_ident DOT LEN
-               |
                expression operator expression
                |
                NOT expression
@@ -155,15 +156,13 @@ expression ::= dot_ident
                |
                LSQR RSQR
                |
-               IDENT IN dot_ident
-               |
-               INT IN dot_ident
-               |
                LCURL key_vals RCURL
                |
-               LCURL RCURL;    
-                 
+               LCURL RCURL;
+      
 dot_ident ::= IDENT
+              |
+              dot_ident DOT LEN  // THIS IS WRONG
               |
               dot_ident DOT IDENT
               |
