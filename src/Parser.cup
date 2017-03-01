@@ -190,7 +190,9 @@ statement ::= expression SEMICOL
               |
               alias
               |
-              tdef;
+              tdef
+              |
+              fdef;
               
 loop_body ::= breakable_statements;
 
