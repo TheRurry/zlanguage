@@ -202,9 +202,9 @@ breakable_statements ::= breakable_statements breakable_statement
                          |
                          BREAK INT SEMICOL;
                          
-normal_statement ::= IF LPAR expression RPAR THEN body FI
+normal_statement ::= IF LPAR expression RPAR THEN statements FI
                      |
-                     IF LPAR expression RPAR THEN body ELSE body FI
+                     IF LPAR expression RPAR THEN statements ELSE statements FI
                      |
                      statement;
                          
@@ -221,6 +221,10 @@ fdef ::= FDEF IDENT LPAR formal_parameter_list RPAR LCURL body RCURL COL type SE
          FDEF IDENT LPAR RPAR LCURL body RCURL SEMICOL
          |
          FDEF IDENT LPAR RPAR LCURL body RCURL COL type SEMICOL
+         |
+         FDEF IDENT LPAR formal_parameter_list RPAR LCURL RCURL COL type SEMICOL
+         |
+         FDEF IDENT LPAR formal_parameter_list RPAR LCURL RCURL SEMICOL
          |
          FDEF IDENT LPAR RPAR LCURL RCURL SEMICOL
          |
