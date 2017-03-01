@@ -176,7 +176,7 @@ statements ::=  statements normal_statement
                 |
                 normal_statement;
 
-statement ::= nullable_expression SEMICOL
+statement ::= expression SEMICOL
               |
               dot_ident ASSIGN seq_vals SEMICOL
               |
