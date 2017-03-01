@@ -162,7 +162,7 @@ expression ::= dot_ident
       
 dot_ident ::= IDENT
               |
-              dot_ident DOT LEN  // THIS IS WRONG
+              dot_ident DOT LEN
               |
               dot_ident DOT IDENT
               |
