@@ -24,7 +24,7 @@ parser code {:
 
 terminal MAIN, TCHAR, TBOOL, TINT, TRAT, TFLOAT, DICT, SEQ, TDEF, ALIAS, FDEF, IF, THEN, ELSE, FI, LOOP, POOL, BREAK, RETURN, READ, PRINT, LEN, TOP, NOT, AND, OR, IMPLY, ADD, SUB, MULT, DIV, POWER, IN, COL, DCOL, LESSTHN, LESSEQ, MORETHN, MOREEQ, EQ, NOTEQ, ASSIGN, LPAR, RPAR, RCURL, LCURL, LSQR, RSQR, DOT, SEMICOL, EVAL, COMMA, IDENT, CHAR, INT, FLOAT, RAT, BOOL, STRING;
 
-nonterminal grammar, globals, type, formal_parameter_list, dot_ident, nullable_expression, function_call, operator, key_vals, seq_vals, numeric, expression, body, statement, fdef, assign, tdef, alias, main, statements, assignments, loop_body, breakable_statements, breakable_statement, normal_statement;
+nonterminal grammar, globals, type, formal_parameter_list, dot_ident, nullable_expression, function_call, operator, key_vals, seq_vals, numeric, expression, body, statement, fdef, assign, tdef, alias, main, statements, assignments, loop_body, breakable_statements, breakable_statement, normal_statement, seq_type;
 
 precedence left OR, AND, IMPLY, NOT;
 precedence left EQ, NOTEQ, LESSTHN, LESSEQ, MORETHN, MOREEQ;
@@ -48,6 +48,10 @@ globals ::= globals fdef
             |
             ;
 
+seq_type ::= type
+             | 
+             TOP;
+
 type ::= TCHAR
          |
          TBOOL
@@ -60,17 +64,9 @@ type ::= TCHAR
          |
          IDENT
          |
-         DICT LESSTHN type COMMA type MORETHN
+         DICT LESSTHN seq_type COMMA seq_type MORETHN
          |
-         DICT LESSTHN type COMMA TOP MORETHN
-         |
-         DICT LESSTHN TOP COMMA type MORETHN
-         |
-         DICT LESSTHN TOP COMMA TOP MORETHN
-         |
-         SEQ LESSTHN type MORETHN
-         |
-         SEQ LESSTHN TOP MORETHN;
+         SEQ LESSTHN seq_type MORETHN;
 
 formal_parameter_list ::= IDENT COL type
                           |
@@ -168,11 +164,7 @@ dot_ident ::= IDENT
               |
               dot_ident LSQR expression RSQR
               |
-              dot_ident LSQR expression COL expression RSQR
-              |
-              dot_ident LSQR expression COL RSQR
-              |
-              dot_ident LSQR COL expression RSQR;      
+              dot_ident LSQR nullable_expression COL nullable_expression RSQR;      
 
 body ::= assignments statements;
 
