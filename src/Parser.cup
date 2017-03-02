@@ -178,7 +178,7 @@ statements ::=  statements normal_statement
                 |
                 normal_statement;
 
-statement ::= expression SEMICOL
+statement ::= function_call SEMICOL
               |
               dot_ident ASSIGN seq_vals SEMICOL
               |
