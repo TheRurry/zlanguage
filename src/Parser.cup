@@ -33,7 +33,7 @@ precedence left ADD, SUB;
 precedence left DIV, MULT;
 precedence left POWER;
 precedence left LPAR, RPAR;
-precedence left IN;
+precedence left DOT, IN;
 
 /* The grammar */
 grammar ::= globals main globals;
@@ -154,11 +154,13 @@ expression ::= dot_ident
                |
                LCURL key_vals RCURL
                |
+               dot_ident DOT LEN
+               |
+               expression DOT LEN
+               |
                LCURL RCURL;
       
 dot_ident ::= IDENT
-              |
-              dot_ident DOT LEN
               |
               dot_ident DOT IDENT
               |

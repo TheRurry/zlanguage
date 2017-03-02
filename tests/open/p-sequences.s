@@ -12,7 +12,6 @@ main {
 
   b:bool := thirdlist.len = l2.len;
 
-
   if (newlist.len <= anotherlist.len) then
      newlist := newlist + anotherlist[0];
   else 
