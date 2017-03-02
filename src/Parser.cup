@@ -142,7 +142,7 @@ expression ::= dot_ident
                |
                NOT expression
                |
-               LPAR expression RPAR
+               LPAR nullable_expression RPAR
                |
                EVAL expression EVAL function_call
                |
