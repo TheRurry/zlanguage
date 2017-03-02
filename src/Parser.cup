@@ -24,7 +24,7 @@ parser code {:
 
 terminal MAIN, TCHAR, TBOOL, TINT, TRAT, TFLOAT, DICT, SEQ, TDEF, ALIAS, FDEF, IF, THEN, ELSE, FI, LOOP, POOL, BREAK, RETURN, READ, PRINT, LEN, TOP, NOT, AND, OR, IMPLY, ADD, SUB, MULT, DIV, POWER, IN, COL, DCOL, LESSTHN, LESSEQ, MORETHN, MOREEQ, EQ, NOTEQ, ASSIGN, LPAR, RPAR, RCURL, LCURL, LSQR, RSQR, DOT, SEMICOL, EVAL, COMMA, IDENT, CHAR, INT, FLOAT, RAT, BOOL, STRING;
 
-nonterminal grammar, globals, type, formal_parameter_list, dot_ident, nullable_expression, function_call, operator, key_vals, seq_vals, numeric, expression, body, statement, fdef, assign, tdef, alias, main, statements, assignments, loop_body, breakable_statements, breakable_statement, normal_statement, seq_type;
+nonterminal grammar, globals, type, formal_parameter_list, dot_ident, nullable_expression, function_call, operator, key_vals, seq_vals, numeric, expression, body, statement, fdef, assign, tdef, alias, main, statements, assignments, breakable_statements, breakable_statement, normal_statement, seq_type;
 
 precedence left OR, AND, IMPLY, NOT;
 precedence left EQ, NOTEQ, LESSTHN, LESSEQ, MORETHN, MOREEQ;
@@ -184,7 +184,7 @@ statement ::= expression SEMICOL
               |
               PRINT expression SEMICOL
               |
-              LOOP loop_body POOL
+              LOOP breakable_statements POOL
               |
               RETURN nullable_expression SEMICOL
               |
@@ -194,8 +194,6 @@ statement ::= expression SEMICOL
               |
               fdef;
               
-loop_body ::= breakable_statements;
-
 breakable_statements ::= breakable_statements breakable_statement
                          |
                          breakable_statement
@@ -210,9 +208,9 @@ normal_statement ::= IF LPAR expression RPAR THEN statements FI
                      |
                      statement;
                          
-breakable_statement ::= IF LPAR expression RPAR THEN loop_body FI
+breakable_statement ::= IF LPAR expression RPAR THEN breakable_statements FI
                         |
-                        IF LPAR expression RPAR THEN loop_body ELSE loop_body FI
+                        IF LPAR expression RPAR THEN breakable_statements ELSE breakable_statements FI
                         |
                         statement;
 
