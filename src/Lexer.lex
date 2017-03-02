@@ -30,6 +30,10 @@ String = [^\"]*
 
 %%
 <YYINITIAL> {
+      /* Unwanted */
+      {Comment}        { /*return nothing*/						   }
+      {Whitespace}     { /* do nothing */                                      }
+
   	/* Key Words */
         "main"          { return symbol(sym.MAIN);      }
         "char"		{ return symbol(sym.TCHAR);     }
@@ -87,13 +91,11 @@ String = [^\"]*
         "," 		{ return symbol(sym.COMMA);	  }
 
   	/* Data Types */
-        {Comment}        { /*return nothing*/ 																	 }
+        "'"{Char}"'"     { return symbol(sym.CHAR, yytext());                    }
+        "\""{String}"\"" { return symbol(sym.CHAR, yytext());                    }
+        {Identifier}     { return symbol(sym.IDENT, yytext());                   }
         {Rational}       { return symbol(sym.RAT, yytext());                     }
         {Float}          { return symbol(sym.FLOAT, Float.parseFloat(yytext())); }
         {Integer}        { return symbol(sym.INT, Integer.parseInt(yytext()));   }
         {Boolean}        { return symbol(sym.BOOL, yytext());                    }
-        "'"{Char}"'"     { return symbol(sym.CHAR, yytext());                    }
-        "\""{String}"\"" { return symbol(sym.CHAR, yytext());                    }
-        {Identifier}     { return symbol(sym.IDENT, yytext());                   }
-        {Whitespace}     { /* do nothing */                                      }
 }

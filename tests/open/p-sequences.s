@@ -5,12 +5,15 @@ s1:string := "";
 s2:string := "hello";
 
 main {
+  b_7:string := "hi";
 
   fnewlist:seq<top> := l1 :: l2;
   anotherlist:seq<top> := [s1] :: [s2] :: newlist;
   thirdlist:seq<top> := l2[:-2] :: l2[3:];
 
   b:bool := thirdlist.len = l2.len;
+
+  
 
   if (newlist.len <= anotherlist.len) then
      newlist := newlist + anotherlist[0];
