@@ -92,10 +92,6 @@ operator ::= AND
              |
              LESSEQ
              |
-             MORETHN
-             |
-             MOREEQ
-             |
              EQ
              |
              NOTEQ
