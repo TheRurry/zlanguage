@@ -42,10 +42,6 @@ globals ::= globals fdef
             |
             globals assign
             |
-            globals tdef
-            |
-            globals alias
-            |
             ;
 
 seq_type ::= type
@@ -190,10 +186,6 @@ statement ::= function_call SEMICOL
               |
               RETURN nullable_expression SEMICOL
               |
-              alias
-              |
-              tdef
-              |
               fdef;
               
 breakable_statements ::= breakable_statements breakable_statement
@@ -234,7 +226,11 @@ fdef ::= FDEF IDENT LPAR formal_parameter_list RPAR LCURL body RCURL COL type SE
 
 assign ::= IDENT COL type ASSIGN seq_vals SEMICOL
            |
-           IDENT COL type SEMICOL;
+           IDENT COL type SEMICOL
+           |
+           alias
+           |
+           tdef;
 
 tdef ::= TDEF IDENT LCURL formal_parameter_list RCURL SEMICOL;
 
