@@ -93,9 +93,9 @@ String = [^\"]*
   	/* Data Types */
         "'"{Char}"'"     { return symbol(sym.CHAR, yytext());                    }
         "\""{String}"\"" { return symbol(sym.CHAR, yytext());                    }
+        {Boolean}        { return symbol(sym.BOOL, yytext());                    }
         {Identifier}     { return symbol(sym.IDENT, yytext());                   }
         {Rational}       { return symbol(sym.RAT, yytext());                     }
         {Float}          { return symbol(sym.FLOAT, Float.parseFloat(yytext())); }
         {Integer}        { return symbol(sym.INT, Integer.parseInt(yytext()));   }
-        {Boolean}        { return symbol(sym.BOOL, yytext());                    }
 }
