@@ -18,7 +18,7 @@ import java_cup.runtime.*;
 %}
 
 /* Data Type Regular Expressions */
-Comment	= #.*\n|\/#([^#]|#[^\/]|\n)*#\/
+Comment = #.*\n|\/#([^#]|#[^\/]|\n)*#\/
 Identifier = [a-zA-Z](_|[a-zA-Z]|[0-9])*
 Char = [^']
 Boolean = T|F
@@ -31,8 +31,8 @@ String = [^\"]*
 %%
 <YYINITIAL> {
       /* Unwanted */
-      {Comment}        { /*return nothing*/						   }
-      {Whitespace}     { /* do nothing */                                      }
+      {Comment}        { /*return nothing*/		  }
+      {Whitespace}     { /* do nothing */               }
 
   	/* Key Words */
         "main"          { return symbol(sym.MAIN);      }
