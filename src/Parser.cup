@@ -158,7 +158,7 @@ expression ::= dot_ident
       
 dot_ident ::= IDENT
               |
-              dot_ident DOT IDENT
+              dot_ident DOT dot_ident
               |
               dot_ident LSQR expression RSQR
               |
