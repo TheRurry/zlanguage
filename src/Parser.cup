@@ -182,34 +182,29 @@ statement ::= function_call SEMICOL
               |
               PRINT expression SEMICOL
               |
-              LOOP statements POOL
+              LOOP breakable_statements POOL
               |
               RETURN nullable_expression SEMICOL;
               
-// breakable_statements ::= breakable_statements breakable_statement
-//                          |
-//                          breakable_statement
-//                          |
-//                          BREAK SEMICOL
-//                          |
-//                          BREAK INT SEMICOL;
-                         
-//Remove breaks for here                         
+breakable_statements ::= breakable_statements breakable_statement
+                         |
+                         breakable_statement
+                         |
+                         BREAK SEMICOL
+                         |
+                         BREAK INT SEMICOL;
+                                                 
 normal_statement ::= IF LPAR expression RPAR THEN statements FI
                      |
                      IF LPAR expression RPAR THEN statements ELSE statements FI
                      |
-                     BREAK SEMICOL
-                     |                   
-                     BREAK INT SEMICOL
-                     |
                      statement;
                          
-// breakable_statement ::= IF LPAR expression RPAR THEN breakable_statements FI
-//                         |
-//                         IF LPAR expression RPAR THEN breakable_statements ELSE breakable_statements FI
-//                         |
-//                         statement;
+breakable_statement ::= IF LPAR expression RPAR THEN breakable_statements FI
+                        |
+                        IF LPAR expression RPAR THEN breakable_statements ELSE breakable_statements FI
+                        |
+                        statement;
 
 fdef ::= FDEF IDENT LPAR formal_parameter_list RPAR LCURL body RCURL COL type SEMICOL
          |
