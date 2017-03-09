@@ -192,7 +192,7 @@ breakable_statements ::= breakable_statements breakable_statement
                          |
                          BREAK SEMICOL
                          |
-                         BREAK INT SEMICOL;
+                         BREAK expression SEMICOL;
                                                  
 normal_statement ::= IF LPAR expression RPAR THEN statements FI
                      |
